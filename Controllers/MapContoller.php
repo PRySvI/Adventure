@@ -17,26 +17,37 @@ class MapContoller
     {
         $cfgFile = fopen($path, "r") or die("Impossible d'ouvrir le fichier!");
         while(!feof($cfgFile))
-        {
-            $str = preg_replace('/\s/', '',fgets($cfgFile));
-            $this->applyParams(explode("-",$str));
+        {;
+            $this->applyParams(preg_replace('/\s/', '',fgets($cfgFile)));
         }
+        $this->map->printMap();
         fclose($cfgFile);
     }
 
-    public function applyParams($arr)
+    public function applyParams($line)
     {
         if($this->debug) {
-            echo 'applyParams '.'<br>'.$arr[0].'<br>'.$arr[1].'<br>'.$arr[2].'<br>'.'+++++++++++++'.'<br>';
+            echo 'applyParams '.'<br>'.$line[0].'<br>'.$line[1].'<br>'.$line[2].'<br>'.'+++++++++++++'.'<br>';
         }
-
-            switch ($arr[0])
+        $cfgKeys = explode("-",$line);
+        $key = substr($line,0,1);
+            switch ($key)
             {
-                case "C​":
-                    $this->map=new Map($arr[1],$arr[2]);
-                    $this->map->printMap();
+                case "C":
+                     $this->map=new Map($cfgKeys[1],$cfgKeys[2]);
+                    break;
+
+                case "M":
+                    $this->map->initCell($cfgKeys[0],$cfgKeys[1],$cfgKeys[2]);
+                    break;
+
+                case "T":
+                    $this->map->initCell($cfgKeys[0]."($cfgKeys[3])",$cfgKeys[1],$cfgKeys[2]);
+                    break;
+                default:
                     break;
             }
+            echo "<br>";
 
     }
 
