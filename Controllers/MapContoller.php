@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Sviatoslav Prylutsky
- * Date: 12/7/18
- * Time: 6:20 PM
- */
-
 require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Map.php');
 
 class MapContoller

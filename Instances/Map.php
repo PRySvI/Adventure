@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Sviatoslav Prylutsky
- * Date: 12/7/18
- * Time: 7:36 AM
- */
-
 class Map
 {
     private $debug = false;
@@ -19,6 +12,7 @@ class Map
     }
 
 
+
     private function initializeMap($sizeX,$sizeY)
     {
         if($this->debug) {echo ('initializeMap <br>');}
@@ -29,20 +23,26 @@ class Map
         }
     }
 
+    public function initCell($key,$y,$x)
+    {
+        if($this->debug) {echo ('initCell  <br>');}
+        $this->mapGrid[$x][$y]="$key";
+    }
+
     public function printMap() // debug only
     {
         if($this->debug) {echo ('printMap  <br>');}
-        echo '<h1>';
+        echo '<table style="\width:100% \">';
         foreach ($this->mapGrid as $cell)
         {
+            echo '<tr>';
             foreach ($cell as $cell2)
             {
-                echo ($cell2);
-                echo '    ';
+                echo "<td> $cell2 </td>";
             }
-            echo '<br>    ';
+            echo '</tr>';
         }
-        echo '</h1>';
+        echo '</table>';
     }
 
 }
