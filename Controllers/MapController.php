@@ -1,18 +1,18 @@
 <?php
-namespace Controllers\MapController;
+//namespace Controllers;
 require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Map.php');
 require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Adventurer.php');
 
 
-class MapContoller
+class MapController
 {
     private static $_instance = null;
     private $debug = false;
     private $map;
-    private $adenturers;
+    private $adventurers = array();
 
     /**
-     * MapContoller constructor.
+     * MapController constructor.
      * @param bool $debug
      * @param $map
      * @param $adenturers
@@ -25,7 +25,7 @@ class MapContoller
     public static function getInstance() {
 
         if(is_null(self::$_instance)) {
-            self::$_instance  = new MapContoller();
+            self::$_instance  = new MapController();
         }
 
         return self::$_instance;
@@ -35,13 +35,22 @@ class MapContoller
     {
         $cfgFile = fopen($path, "r") or die("Impossible d'ouvrir le fichier!");
         while(!feof($cfgFile))
-        {;
+        {
             $this->applyParams(preg_replace('/\s/', '',fgets($cfgFile)));
         }
-        $this->map->printMap();
         fclose($cfgFile);
+        $this->map->printMap();
+        $this->startGame();
     }
 
+    public function startGame()
+    {
+        //startBots();
+        foreach ($this->adventurers as $currentAdventurer)
+        {
+            $currentAdventurer->startMyRoute();
+        }
+    }
     /**
      * This block make initialization of params
      */
@@ -55,7 +64,8 @@ class MapContoller
             switch ($key)
             {
                 case "C":
-                     $this->map=new Map($cfgKeys[1],$cfgKeys[2]);
+                    $this->map=Map::getInstance();
+                    $this->map->initializeMap($cfgKeys[1],$cfgKeys[2]);
                     break;
 
                 case "M":
@@ -67,8 +77,8 @@ class MapContoller
                     break;
 
                 case "A":
-                    array_push($this->adenturers,new Adventurer($cfgKeys[1],$cfgKeys[2],$cfgKeys[3],$cfgKeys[4],$cfgKeys[5]));
-                    $this->map->initCell($cfgKeys[0]."(".substr($cfgKeys[3],0,sizeof(cfgKeys[3])/2).")",$cfgKeys[1],$cfgKeys[2]);
+                    array_push($this->adventurers,new Adventurer($cfgKeys[1],$cfgKeys[2],$cfgKeys[3],$cfgKeys[4],$cfgKeys[5],$this->map));
+                    $this->map->initCell($cfgKeys[0]."(".substr($cfgKeys[1],0,strlen($cfgKeys[1])/2).")",$cfgKeys[2],$cfgKeys[3]);
                     break;
 
 
