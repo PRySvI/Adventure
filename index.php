@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <body>
-<div style="text-align:center;padding-top: 100px">
+<div style="text-align:center;padding-left: 550px ;padding-top: 100px">
 <?php
-require 'Controllers/MapContoller.php';
-$mapContoller =  new MapContoller();
+//start:sss
+require ($_SERVER['DOCUMENT_ROOT'] . '/Controllers/MapController.php');
+//use \Controllers\MapController as MapController;
+$mapContoller =  MapController::getInstance();
 $mapContoller->loadCfg("map.cfg");
 ?>
 </div>
