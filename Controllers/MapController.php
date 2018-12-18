@@ -10,6 +10,7 @@ class MapController
     private $debug = false;
     private $map;
     private $adventurers = array();
+    private $someAdventurerMaxSteps = 0;
 
     /**
      * MapController constructor.
@@ -43,15 +44,24 @@ class MapController
         $this->startGame();
     }
 
+    /* The game loop, is true while adventurer (X) dont make all movements
+     * $someAdventurerMaxSteps this is the most long route of adventurer (X) loaded in cfg
+     * Exemple: Adv (Bob) have route AAFFAAA = 7 steps and Adv (John) have route AADADA = 6 steps
+     * so $someAdventurerMaxSteps = 7
+     * Every rotations every adventurers make one step
+     */
     public function startGame()
     {
         //startBots();
-        foreach ($this->adventurers as $currentAdventurer)
+        //
+        for($currentStep = 0 ; $currentStep < $this->someAdventurerMaxSteps; $currentStep++)
         {
-            $currentAdventurer->startMyRoute();
+            foreach ($this->adventurers as $currentAdventurer) {
+                $currentAdventurer->goToNextStep($currentStep);
+            }
         }
     }
-    /**
+    /*
      * This block make initialization of params
      */
     public function applyParams($line)
@@ -79,6 +89,10 @@ class MapController
                 case "A":
                     array_push($this->adventurers,new Adventurer($cfgKeys[1],$cfgKeys[2],$cfgKeys[3],$cfgKeys[4],$cfgKeys[5],$this->map));
                     $this->map->initCell($cfgKeys[0]."(".substr($cfgKeys[1],0,strlen($cfgKeys[1])/2).")",$cfgKeys[2],$cfgKeys[3]);
+                    if(strlen($cfgKeys[5])>$this->someAdventurerMaxSteps)
+                    {
+                        $this->someAdventurerMaxSteps = strlen($cfgKeys[5]);
+                    }
                     break;
 
 
