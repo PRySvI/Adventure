@@ -26,7 +26,7 @@ class Adventurer
         $this->inMapPositionY = $inMapPositionY;
         $this->inMapPositionX = $inMapPositionX;
         $this->orientation = $orientation;
-        $this->moving_route = $moving_route;
+        $this->moving_route = str_split($moving_route);
         $this->name = $name;
         $this->map = $map;
     }
@@ -72,32 +72,28 @@ class Adventurer
         $this->inMapPositionX = $X;
     }
 
-    public function startMyRoute()
-    {
-        //var_dump(str_split($this->moving_route));
-        $steps = str_split($this->moving_route);
-        foreach ($steps as $nextStep)
-        {
-             if(!$this->isAlive)
-                 return ; // if adv is dead , leave the method.
 
-             if(!$this->canMove)
-                 return ; // same for blocked adventurers;
-
-             $this->goToNextStep($nextStep);
-
-        }
-
-     }
-
-     private function goToNextStep($nextStep)
+     public function goToNextStep($nextIteration)
      {
-         switch ($nextStep)
+         if($nextIteration > count($this->moving_route))
+         {
+             return;
+         }
+
+         if(!$this->isAlive)
+             return ; // if adv is dead , leave the method.
+
+       /*  if(!$this->canMove)
+             return ; // same for blocked adventurers;*/
+
+         switch ($this->moving_route[$nextIteration])
          {
              case 'A':
                  $this->movForward();
                  break;
          }
+
+
          // $this->map->printMap();
      }
 
@@ -110,7 +106,7 @@ class Adventurer
             return false;
 
 
-       /*$mapCell = substr($this->map->getCell($X, $Y),0,1); //Get only first char of Cell : Exemple A(Ind) will return only A
+       /*$mapCell = substr($this->map->getCell($X, $Y),0,1); //Get only first char of Cellable : Exemple A(Ind) will return only A
 
         if($mapCell=='A'||$mapCell=='M')
             return false;*/
