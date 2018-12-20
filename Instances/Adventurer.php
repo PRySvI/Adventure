@@ -1,5 +1,7 @@
 <?php
-class Adventurer
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Walkable.php');
+require_once ('Map.php');
+class Adventurer extends Walkable
 {
      private $isAlive = true;
      private $inMapPositionY;
@@ -12,62 +14,22 @@ class Adventurer
      private $inFight;
      private $map;
 
-    /**
-     * Adventurer constructor.
-     * @param $name
-     * @param $inMapPositionY
-     * @param $inMapPositionX
-     * @param $orientation
-     * @param $moving_route
-     * @param $map
-     */
-    public function __construct($name, $inMapPositionY, $inMapPositionX, $orientation, $moving_route,$map )
+
+    public function __construct($name, $inMapPositionY, $inMapPositionX, $orientation, $moving_route)
     {
         $this->inMapPositionY = $inMapPositionY;
         $this->inMapPositionX = $inMapPositionX;
         $this->orientation = $orientation;
         $this->moving_route = str_split($moving_route);
         $this->name = $name;
-        $this->map = $map;
+        $this->map = Map::getInstance();
+        $this->setMyMapPosition($inMapPositionY, $inMapPositionX);
     }
 
 
-
-    /**
-     * @param int $inMapPositionY
-     */
-    public function setInMapPositionY($inMapPositionY)
+    function setMyMapPosition($Y, $X)
     {
-        $this->inMapPositionY = $inMapPositionY;
-    }
-
-    /**
-     * @return int
-     */
-    public function getInMapPositionX()
-    {
-        return $this->inMapPositionX;
-    }
-
-    /**
-     * @return int
-     */
-    public function getInMapPositionY()
-    {
-        return $this->inMapPositionY;
-    }
-    /**
-     * @param int $inMapPositionX
-     */
-    public function setInMapPositionX($inMapPositionX)
-    {
-        $this->inMapPositionX = $inMapPositionX;
-    }
-
-    private function setInMapPositions($X ,$Y){
-
-        $this->map->initCell(".", $this->inMapPositionX,$this->inMapPositionY);
-        $this->map->initCell("A(".substr($this->name,0,strlen($this->name)/2).")",$X,$Y);
+        $this->map->initCell($this,$Y, $X);
         $this->inMapPositionY = $Y;
         $this->inMapPositionX = $X;
     }
@@ -94,16 +56,23 @@ class Adventurer
          }
 
 
-         // $this->map->printMap();
+
      }
 
-     private function checkMoveRights($X , $Y)
+     public function checkMoveRights($X , $Y)
      {
         if($this->map->getSizeX() < $X)
             return false;
 
         if($this->map->getSizeY() < $Y)
             return false;
+
+        // $cell = $this->map->getCellInstanceInfo($X , $Y);
+         /*
+                  if($cell instanceof Monster){
+                      return $this->fight();
+
+                  }*/
 
 
        /*$mapCell = substr($this->map->getCell($X, $Y),0,1); //Get only first char of Cellable : Exemple A(Ind) will return only A
@@ -116,8 +85,9 @@ class Adventurer
      }
      private function movForward()
      {
-         $tmpX=$this->getInMapPositionX();
-         $tmpY=$this->getInMapPositionY();
+         $tmpX=$this->inMapPositionX;
+         $tmpY=$this->inMapPositionY;
+
          switch ($this->orientation)
          {
              case 'S':
@@ -125,16 +95,29 @@ class Adventurer
                  if($this->checkMoveRights($tmpX,$tmpY))
                  {
 
-                     $this->setInMapPositions($tmpX,$tmpY);
+                     $this->setMyMapPosition($tmpX,$tmpY);
                  }
                  break;
          }
+
+        // $this->map->printMap(); //dubug
      }
-    private function fight()
+    public function fight()
     {
         $inFight = true;
         echo "fight";
         $inFight = false;
+        return true;
+    }
+
+    function collapse()
+    {
+        // TODO: Implement collapse() method.
+    }
+
+    function getPrintName()
+    {
+        return "A" ."(".substr($this->name,0,strlen($this->name)/2).")";
     }
 
 }
