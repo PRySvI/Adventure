@@ -9,6 +9,7 @@
 interface Cellable
 {
     function collapse();
-    function setMyMapPosition($X , $Y);
+    function setMyMapPosition($Y,$X);
     function getPrintName();
+    function getMyInstance();
 }

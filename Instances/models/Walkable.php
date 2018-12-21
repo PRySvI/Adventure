@@ -22,4 +22,8 @@ abstract class Walkable implements Cellable
     abstract public function fight();
     abstract public function checkMoveRights($X , $Y);
 
+    function getMyInstance()
+    {
+        return $this;
+    }
 }

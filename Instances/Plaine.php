@@ -6,7 +6,7 @@
  * Time: 6:08 AM
  */
 
-require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Cellable.php');
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Cellable.php');
 //use \Cellable as Cellable;
 
 class Plaine implements Cellable
@@ -24,5 +24,10 @@ class Plaine implements Cellable
     public function getPrintName()
     {
         return ".";
+    }
+
+    function getMyInstance()
+    {
+        return $this;
     }
 }

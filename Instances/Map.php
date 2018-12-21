@@ -22,22 +22,10 @@ class Map
     }
 
 
-    /*public function initializeMap($sizeX,$sizeY)
+    public function initializeMap($sizeY,$sizeX)
     {
-        $this->sizeX=$sizeX-1; // arrays begins form 0 so we decrciments value by 1
-        $this->sizeY=$sizeY-1; // arrays begins form 0 so we decrciments value by 1
-        if($this->debug) {echo ('initializeMap <br>');}
-        $this->mapGrid = array();
-        for($i = 0 ; $i < $sizeY; $i++ )
-        {
-            $this-> mapGrid[$i]=array_fill(0,$sizeX,'.');
-        }
-    }*/
-
-    public function initializeMap($sizeX,$sizeY)
-    {
-        $this->sizeX = $sizeX - 1; // arrays begins form 0 so we decrciments value by 1
-        $this->sizeY = $sizeY - 1; // arrays begins form 0 so we decrciments value by 1
+        $this->sizeX = $sizeX; // arrays begins form 0 so we decrciments value by 1
+        $this->sizeY = $sizeY; // arrays begins form 0 so we decrciments value by 1
         if ($this->debug) {
             echo('initializeMap <br>');
         }
@@ -52,21 +40,22 @@ class Map
         if($this->debug) {echo ('initCell  <br>');}
 
         //if($this->sizeof($this->mapGrid)) a finir verification
-        $this->mapGrid[$x][$y]=$key;
+        $this->mapGrid[$y][$x]=$key;
     }
 
     public function getCellInstanceInfo($y, $x)
     {
-        return $this->mapGrid[$y][$x];
+        if($y >= $this->getSizeY() || $x >= $this->getSizeX() || $y < 0  || $x < 0)
+        {
+            return null;
+        }
+
+        return $this->mapGrid[$y][$x]->getMyInstance();
     }
 
-    public function getCellInfoChar($y, $x)
-    {
-        return $this->mapGrid[$y][$x];
-    }
 
-    public function getSizeX(){return $this->sizeX;}
-    public function getSizeY(){return $this->sizeY;}
+    public function getSizeX(){ return $this->sizeX;}
+    public function getSizeY(){ return $this->sizeY;}
 
     public function printMap() // debug only
     {
@@ -84,7 +73,8 @@ class Map
         }
         echo '</table>';
 
-        echo "<br>";
+        echo "<br> -------------------------------------  -------------------------------------  -------------------------------------  -------------------------------------  -------------------------------------  -------------------------------------<br> ";
+
 
 
     }
