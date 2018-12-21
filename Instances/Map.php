@@ -45,7 +45,7 @@ class Map
 
     public function getCellInstanceInfo($y, $x)
     {
-        if($y > $this->getSizeY() || $x > $this->getSizeX() )
+        if($y >= $this->getSizeY() || $x >= $this->getSizeX() || $y < 0  || $x < 0)
         {
             return null;
         }
@@ -53,8 +53,9 @@ class Map
         return $this->mapGrid[$y][$x]->getMyInstance();
     }
 
-    public function getSizeX(){echo "<br> sizeX $this->sizeX"; return $this->sizeX;}
-    public function getSizeY(){echo "<br> sizeY $this->sizeY"; return $this->sizeY;}
+
+    public function getSizeX(){ return $this->sizeX;}
+    public function getSizeY(){ return $this->sizeY;}
 
     public function printMap() // debug only
     {
@@ -72,7 +73,8 @@ class Map
         }
         echo '</table>';
 
-        echo "<br>";
+        echo "<br> -------------------------------------  -------------------------------------  -------------------------------------  -------------------------------------  -------------------------------------  -------------------------------------<br> ";
+
 
 
     }

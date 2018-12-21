@@ -113,7 +113,6 @@ class MapController
                 default:
                     break;
             }
-            echo "<br>";
 
     }
 

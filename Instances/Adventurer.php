@@ -14,6 +14,9 @@ class Adventurer extends Walkable
      private $inFight;
      private $map;
      private $orientations = array('N','E','S','O');
+     private $collapsed_tresor_visited;
+     private $collapsed_tresor_current;
+     private $collapsed_tresor_next;
 
 
     public function __construct($name, $inMapPositionY, $inMapPositionX, $orientation, $moving_route)
@@ -25,15 +28,30 @@ class Adventurer extends Walkable
         $this->name = $name;
         $this->map = Map::getInstance();
         $this->setMyMapPosition($inMapPositionY, $inMapPositionX);
+        $this->level=1;
     }
 
 
-    function setMyMapPosition($Y, $X)
+    function setMyMapPosition($newY, $newX)
     {
-        $this->map->initCell(new Plaine(),$this->inMapPositionY,$this->inMapPositionX);//tresor?
-        $this->map->initCell($this,$Y, $X);
-        $this->inMapPositionY = $Y;
-        $this->inMapPositionX = $X;
+        $this->collapsed_tresor_next;
+
+        $this->map->initCell(new Plaine(),$this->inMapPositionY,$this->inMapPositionX);
+        if($this->collapsed_tresor_current != null)
+        {
+            $this->map->initCell($this->collapsed_tresor_current,$this->inMapPositionY,$this->inMapPositionX);
+            $this->collapsed_tresor_current = null;
+        }
+
+        if($this->collapsed_tresor_next != null)
+        {
+            $this->collapsed_tresor_current = $this->collapsed_tresor_next;
+            $this->collapsed_tresor_next = null;
+        }
+
+        $this->map->initCell($this,$newY, $newX);
+        $this->inMapPositionY = $newY;
+        $this->inMapPositionX = $newX;
     }
 
 
@@ -51,7 +69,6 @@ class Adventurer extends Walkable
              return ; // same for blocked adventurers;*/
 
          $indexOfOrientation = array_search($this->current_orientation,$this->orientations);
-         echo "$indexOfOrientation = indexOfOrientation before id=$nextIteration</br> ";
          switch ($this->moving_route[$nextIteration])
          {
              case 'A':
@@ -72,50 +89,19 @@ class Adventurer extends Walkable
 
 
          }
-         echo "$indexOfOrientation = indexOfOrientation after </br> ";
          $this->moveForward();
 
      }
 
-     public function checkMoveRights($Y,$X)
-     {
-         echo "<br> $Y=y $X=x";
-        if($this->map->getSizeX() < $X || $this->map->getSizeY() < $Y || $X<0)
-            return false;
-
-
-        $cell = $this->map->getCellInstanceInfo( $Y, $X );
-
-        if($cell==null)
-            return false;
-
-
-         /*
-                  if($cell instanceof Monster){
-                      return $this->fight();
-
-                  }*/
-
-
-       /*$mapCell = substr($this->map->getCell($X, $Y),0,1); //Get only first char of Cellable : Exemple A(Ind) will return only A
-
-        if($mapCell=='A'||$mapCell=='M')
-            return false;*/
-
-
-        return true;
-        //tresor
-     }
-     private function moveForward()
+      private function moveForward()
      {
          $tmpX=$this->inMapPositionX;
          $tmpY=$this->inMapPositionY;
-         echo "$this->current_orientation + this->current_orientation";
+         echo "orient $this->current_orientation";
          switch ($this->current_orientation)
          {
              case 'S':
                  $tmpY++;
-                 echo "$tmpY + this->$tmpY";
                  break;
 
              case 'N':
@@ -133,15 +119,60 @@ class Adventurer extends Walkable
              default:
                  break;
          }
-
+         echo "<br> MvRights Y $tmpY  X $tmpX level $this->level";
          if($this->checkMoveRights($tmpY,$tmpX))
          {
-
              $this->setMyMapPosition($tmpY,$tmpX);
          }
 
         $this->map->printMap(); //dubug
      }
+
+    public function checkMoveRights($Y,$X)
+    {
+        if($this->map->getSizeX() < $X || $this->map->getSizeY() < $Y || $X<0)
+            return false;
+
+
+        $cell = $this->map->getCellInstanceInfo( $Y, $X );
+
+        if($cell==null)
+            return false;
+
+        if($cell instanceof Montagne)
+            return false;
+
+        if($cell instanceof Adventurer) // Properties Can Walk to Dead Man
+            return false;
+
+        if($cell instanceof Tresor)
+        {
+            $cell->reduiceCount();
+            $this->level++;
+            if($cell->getCount()>0)
+                $this->collapsed_tresor_next = $cell;
+
+            return true;
+
+        }
+
+
+        /*
+                 if($cell instanceof Monster){
+                     return $this->fight();
+
+                 }*/
+
+
+        /*$mapCell = substr($this->map->getCell($X, $Y),0,1); //Get only first char of Cellable : Exemple A(Ind) will return only A
+
+         if($mapCell=='A'||$mapCell=='M')
+             return false;*/
+
+
+        return true;
+    }
+
     public function fight()
     {
         $inFight = true;

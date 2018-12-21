@@ -39,4 +39,17 @@ class Tresor implements Cellable
     {
         return $this;
     }
+
+    function getCount()
+    {
+        return $this->count;
+    }
+
+    function reduiceCount()
+    {
+        if($this->count>0)
+        {
+            $this->count--;
+        }
+    }
 }
