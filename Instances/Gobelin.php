@@ -5,9 +5,18 @@
  * Date: 12/19/18
  * Time: 6:11 AM
  */
+require_once ("models/Monster.php");
 
 class Gobelin extends Walkable implements Monster
 {
+    private $map;
+    private $direction;
+
+    public function __construct($Y, $X)
+    {
+        $this->map=Map::getInstance();
+        $this->setMyMapPosition($Y, $X);
+    }
 
     function collapse()
     {
@@ -24,8 +33,19 @@ class Gobelin extends Walkable implements Monster
         // TODO: Implement fight() method.
     }
 
-    function setMyMapPosition()
+    function getPrintName()
     {
-        // TODO: Implement setMyMapPosition() method.
+        return "G";
     }
+
+    public function checkMoveRights($X, $Y)
+    {
+        // TODO: Implement checkMoveRights() method.
+    }
+
+    function setMyMapPosition($Y,$X)
+    {
+        $this->map->initCell($this,$Y, $X);
+    }
+
 }

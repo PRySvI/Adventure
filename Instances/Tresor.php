@@ -33,4 +33,10 @@ class Tresor implements Cellable
     {
         return "T"."(".$this->count.")";
     }
+
+
+    function getMyInstance()
+    {
+        return $this;
+    }
 }

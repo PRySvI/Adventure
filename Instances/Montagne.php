@@ -30,4 +30,10 @@ class Montagne implements Cellable
     {
        return "M";
     }
+
+
+    function getMyInstance()
+    {
+        return $this;
+    }
 }

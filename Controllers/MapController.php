@@ -1,11 +1,15 @@
 <?php
 //namespace Controllers;
-require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Map.php');
+/*require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Map.php');
 require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Adventurer.php');
 require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Montagne.php');
 require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Tresor.php');
+require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Gobelin.php');
+require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Orc.php');*/
 
-
+foreach(glob($_SERVER['DOCUMENT_ROOT'] . "/Instances/" . "/*.php") as $file){
+    require_once $file;
+}
 
 class MapController
 {
@@ -44,13 +48,14 @@ class MapController
         }
         fclose($cfgFile);
         $this->map->printMap();
+        echo "====== FIRST PRINT BEFORE START GAME =========<br>";
         $this->startGame();
     }
 
     /* The game loop, is true while adventurer (X) dont make all movements
      * $someAdventurerMaxSteps this is the most long route of adventurer (X) loaded in cfg
      * Exemple: Adv (Bob) have route AAFFAAA = 7 steps and Adv (John) have route AADADA = 6 steps
-     * so $someAdventurerMaxSteps = 7
+     * so $someAdventurerMaxSteps = 7 //
      * Every rotations every adventurers make one step
      */
     public function startGame()
@@ -78,25 +83,32 @@ class MapController
             {
                 case "C":
                     $this->map=Map::getInstance();
-                    $this->map->initializeMap($cfgKeys[1],$cfgKeys[2]);
+                    $this->map->initializeMap($cfgKeys[2],$cfgKeys[1]);
                     break;
 
                 case "M":
-                    new Montagne($cfgKeys[1],$cfgKeys[2]);
+                    new Montagne($cfgKeys[2],$cfgKeys[1]);
                     break;
 
-                  case "T":
-                    new Tresor($cfgKeys[3],$cfgKeys[1],$cfgKeys[2]);
+                case "T":
+                    new Tresor($cfgKeys[3],$cfgKeys[2],$cfgKeys[1]);
                     break;
 
                 case "A":
-                    array_push($this->adventurers,new Adventurer($cfgKeys[1],$cfgKeys[2],$cfgKeys[3],$cfgKeys[4],$cfgKeys[5]));
-                    if(strlen($cfgKeys[5])>$this->someAdventurerMaxSteps)
+                    array_push($this->adventurers,new Adventurer($cfgKeys[1],$cfgKeys[3],$cfgKeys[2],$cfgKeys[4],$cfgKeys[5]));
+                    if(strlen($cfgKeys[5]) > $this->someAdventurerMaxSteps)
                     {
                         $this->someAdventurerMaxSteps = strlen($cfgKeys[5]);
                     }
                     break;
 
+                case "G":
+                    new Gobelin($cfgKeys[2],$cfgKeys[1]);
+                    break;
+
+                case "O":
+                    new Orc($cfgKeys[2],$cfgKeys[1]);
+                    break;
 
                 default:
                     break;
