@@ -28,7 +28,7 @@ class Orc extends Walkable implements Monster
         // TODO: Implement goToNextStep() method
     }
 
-    public function fight()
+    public function fight($enemy)
     {
         // TODO: Implement fight() method.
     }

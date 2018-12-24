@@ -24,23 +24,32 @@ class Map
 
     public function initializeMap($sizeY,$sizeX)
     {
-        $this->sizeX = $sizeX; // arrays begins form 0 so we decrciments value by 1
-        $this->sizeY = $sizeY; // arrays begins form 0 so we decrciments value by 1
+        $this->sizeX = $sizeX;
+        $this->sizeY = $sizeY;
         if ($this->debug) {
             echo('initializeMap <br>');
         }
         $this->mapGrid = array();
         for($i = 0 ; $i < $sizeY; $i++ )
         {
-            $this-> mapGrid[$i]=array_fill(0,$sizeX,new Plaine());
+            for($k = 0 ; $k < $sizeX; $k++ )
+            {
+                $this->mapGrid[$i][$k]=new Plaine($i,$k);
+            }
         }
     }
     public function initCell($key,$y,$x)
     {
         if($this->debug) {echo ('initCell  <br>');}
 
-        //if($this->sizeof($this->mapGrid)) a finir verification
-        $this->mapGrid[$y][$x]=$key;
+
+        if(!($this->getCellInstanceInfo($y, $x) instanceof Plaine))
+        {
+            $this->mapGrid[$y][$x]=new Plaine($y,$x);
+        }
+
+        $this->mapGrid[$y][$x]->add($key);
+
     }
 
     public function getCellInstanceInfo($y, $x)
@@ -53,6 +62,24 @@ class Map
         return $this->mapGrid[$y][$x]->getMyInstance();
     }
 
+    public function checkAndPlace($inst,$Y,$X)
+    {
+        if($this->getSizeX() < $X || $this->getSizeY() < $Y || $X<0)
+            return;
+
+        $cell =  $this->getCellInstanceInfo($Y,$X);
+
+        if($inst instanceof Walkable && !($inst->getIsAlive()))
+            return;
+
+        if($cell -> allowAdd($inst))
+        {
+
+            $lastCell = $this->getCellInstanceInfo($inst->getInMapPositionY(),$inst->getInMapPositionX());
+            $lastCell->remove($inst);
+            $inst->setMyMapPosition($Y,$X);
+        }
+    }
 
     public function getSizeX(){ return $this->sizeX;}
     public function getSizeY(){ return $this->sizeY;}

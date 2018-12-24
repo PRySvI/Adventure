@@ -19,11 +19,6 @@ class Tresor implements Cellable
         $this->setMyMapPosition($Y, $X);
     }
 
-    function collapse()
-    {
-        // TODO: Implement collapse() method.
-    }
-
     function setMyMapPosition($Y, $X)
     {
         $this->map->initCell($this,$Y, $X);
@@ -47,9 +42,14 @@ class Tresor implements Cellable
 
     function reduiceCount()
     {
-        if($this->count>0)
+        if($this->count > 0)
         {
             $this->count--;
         }
+    }
+
+    public function getSortWeight()
+    {
+        return 2;
     }
 }
