@@ -36,4 +36,9 @@ class Montagne implements Cellable
     {
         return $this;
     }
+
+    public function getSortWeight()
+    {
+        return 4;
+    }
 }

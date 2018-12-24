@@ -15,15 +15,44 @@ abstract class Walkable implements Cellable
     private $inMapPositionY;
     private $inMapPositionX;
     private $level;
-    private $inFight;
     private $map;
 
     abstract public function goToNextStep($nextIterationStep);
-    abstract public function fight();
-    abstract public function checkMoveRights($X , $Y);
+    public function fight($enemy)
+    {
+        //all walakable (exeption Adventurer) fight method
+        echo $this->getPrintName()." fight";
+        if($this->level > $enemy->getLevel())
+        {
+            $enemy->doDie();
+        }
+        else
+        {
+            $this->doDie();
+        }
+    }
 
     function getMyInstance()
     {
         return $this;
+    }
+
+    function getLevel(){
+        return $this->level;
+    }
+
+    function getIsAlive()
+    {
+        return $this->isAlive;
+    }
+
+    public function getSortWeight()
+    {
+        return ($this->getIsAlive() == true ? 3 : 1);
+    }
+
+    public function doDie()
+    {
+        $this->isAlive=false;
     }
 }

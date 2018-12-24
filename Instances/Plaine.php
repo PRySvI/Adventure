@@ -11,9 +11,15 @@ require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Cellable.php');
 
 class Plaine implements Cellable
 {
-    public function collapse()
+    private $cellContainer;
+    private $Y;
+    private $X;
+
+    public function __construct($nY,$nX)
     {
-        // TODO: Implement collapse() method.
+        $this->cellContainer = array();
+        $this->Y = $nY;
+        $this->X = $nX;
     }
 
     public function setMyMapPosition($X, $Y)
@@ -21,13 +27,117 @@ class Plaine implements Cellable
         // TODO: Implement setMyMapPosition() method.
     }
 
+    private function sortByPriority($a, $b)
+    {
+        return $b->getSortWeight() - $a->getSortWeight();
+
+    }
+
+
     public function getPrintName()
     {
-        return ".";
+
+        if(count($this->cellContainer) > 0)
+        {
+            if(count($this->cellContainer) > 1)
+                usort($this->cellContainer ,array($this, 'sortByPriority'));
+
+            foreach ($this->cellContainer as $item)
+            {
+                return $item->getPrintName();
+            }
+        }
+        else
+        {
+            return ".";
+        }
     }
+
+
 
     function getMyInstance()
     {
         return $this;
+    }
+
+    function add($key)
+    {
+        if(!($key instanceof Cellable))
+        {
+            return;
+        }
+
+
+        if($key!=null)
+        {
+            array_push($this->cellContainer,$key);
+        }
+    }
+
+    function remove($obj){
+
+        unset($this->cellContainer[array_search($obj,$this->cellContainer)]);
+    }
+
+    function allowAdd($key)
+    {
+        if($this->cellContainer!=null && count($this->cellContainer)>0)
+        {
+            usort($this->cellContainer ,array($this, 'sortByPriority'));
+
+            for($i=0 ; $i < count($this->cellContainer) ; $i++)
+            {
+                if(is_null($this->cellContainer[$i]) )
+                    continue;
+
+
+                $item = $this->cellContainer[$i];
+
+                if($item instanceof Montagne)
+                    return false;
+
+                if($key instanceof Walkable)
+                {
+
+                    if($key instanceof $item)
+                        return false;
+
+                    if($key instanceof Adventurer && $item instanceof Adventurer)
+                    {
+                        return false;
+                    }
+
+                    if($key instanceof Adventurer && $item instanceof Tresor)
+                    {
+                        $key->levelUp();
+
+                        $item->reduiceCount();
+
+                        if($item->getCount()==0)
+                        {
+                            unset($this->cellContainer[$i]);
+                        }
+                    }
+
+                    if($key instanceof Monster && $item instanceof Monster)
+                        return false;
+
+                    if($key instanceof Monster && $item instanceof Adventurer || $key instanceof Adventurer && $item instanceof Monster)
+                    {
+                        if($item->getIsAlive() && $key->getIsAlive())
+                            $key->fight($item);
+                    }
+
+                }
+
+            }
+        }
+
+        return true;
+    }
+
+   public function getSortWeight()
+    {
+        return 0;
     }
 }

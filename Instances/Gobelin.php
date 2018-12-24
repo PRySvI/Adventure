@@ -18,24 +18,24 @@ class Gobelin extends Walkable implements Monster
         $this->setMyMapPosition($Y, $X);
     }
 
-    function collapse()
-    {
-        // TODO: Implement collapse() method.
-    }
-
     public function goToNextStep($nextIterationStep)
     {
         // TODO: Implement goToNextStep() method.
     }
 
-    public function fight()
+    public function fight($enemy)
     {
         // TODO: Implement fight() method.
     }
 
     function getPrintName()
     {
-        return "G";
+        $dead= "";
+        if(!($this->getIsAlive()))
+        {
+            $dead = " (x_x)";
+        }
+        return "G".$dead;
     }
 
     public function checkMoveRights($X, $Y)
