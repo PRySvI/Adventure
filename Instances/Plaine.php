@@ -9,22 +9,15 @@
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Cellable.php');
 //use \Cellable as Cellable;
 
-class Plaine implements Cellable
+class Plaine extends Cellable
 {
     private $cellContainer;
-    private $Y;
-    private $X;
 
     public function __construct($nY,$nX)
     {
         $this->cellContainer = array();
-        $this->Y = $nY;
-        $this->X = $nX;
-    }
-
-    public function setMyMapPosition($X, $Y)
-    {
-        // TODO: Implement setMyMapPosition() method.
+        $this->inMapPositionY = $nY;
+        $this->inMapPositionX = $nX;
     }
 
     private function sortByPriority($a, $b)
@@ -54,12 +47,6 @@ class Plaine implements Cellable
     }
 
 
-
-    function getMyInstance()
-    {
-        return $this;
-    }
-
     function add($key)
     {
         if(!($key instanceof Cellable))
@@ -67,6 +54,10 @@ class Plaine implements Cellable
             return;
         }
 
+        if($key instanceof Plaine)
+        {
+            return;
+        }
 
         if($key!=null)
         {
@@ -121,6 +112,7 @@ class Plaine implements Cellable
 
                         if($item->getCount()==0)
                         {
+                            $item->deleteMe();
                             unset($this->cellContainer[$i]);
                         }
                     }
@@ -137,7 +129,13 @@ class Plaine implements Cellable
 
         return true;
     }
+    public function getMyResults()
+    {
+        $separator = " - ";
+        $export_line = $this->getPrintName().$separator.$this->getInMapPositionY().$separator.$this->getInMapPositionX();
+        return $export_line."\r\n";
 
+    }
    public function getSortWeight()
     {
         return 0;

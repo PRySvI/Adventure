@@ -2,11 +2,12 @@
 /**
  * Created by PhpStorm.
  * User: Sviatoslav Prylutsky
- * Date: 12/19/18
+ * Date: 12/02/18
  * Time: 5:54 AM
  */
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Walkable.php');
 require_once ('Map.php');
+
 class Adventurer extends Walkable
 {
      private $current_orientation;
@@ -60,13 +61,12 @@ class Adventurer extends Walkable
              default:
                  break;
 
-
          }
          $this->moveForward();
 
      }
 
-      private function moveForward()
+     public function moveForward()
      {
          $tmpX=$this->inMapPositionX;
          $tmpY=$this->inMapPositionY;
@@ -95,13 +95,14 @@ class Adventurer extends Walkable
 
 
          $this->map->checkAndPlace($this,$tmpY,$tmpX);
-        $this->map->printMap(); //dubug
+
+         if($GLOBALS["DEBUG"])
+            $this->map->printMap(); //dubug
      }
 
 
     public function fight($enemy)
     {
-        echo " <br> Adventurer fight <br>";
         if($this->level >= $enemy->getLevel())
         {
             $enemy->doDie();
@@ -117,15 +118,29 @@ class Adventurer extends Walkable
     function getPrintName()
     {
 
-        $dead= "";
-        if(!($this->getIsAlive()))
+        if($GLOBALS["DEBUG"])
         {
-            $dead = " (x_x)";
+            $dead= "";
+            if(!($this->getIsAlive()))
+            {
+                $dead = " (x_x)";
+            }
+            return "A" ."(".$this->name.")".$dead;
         }
-        return "A" ."(".$this->name.")".$dead;
+        return "A";
     }
 
     function levelUp(){
         $this -> level ++;
+    }
+
+    public function getMyResults()
+    {
+
+        $separator = " - ";
+        $export_title="# {A comme Aventurier} - {".$this->getPrintName()."} - {Axe horizontal} - {Axe vertical} - {Orientation} - {Level Obtenu}";
+        $export_line = $this->getPrintName().$separator.$this->name.$separator.$this->getInMapPositionX().$separator.$this->getInMapPositionY().$separator.$this->current_orientation.$separator.$this->getLevel();
+        return $export_title."\r\n".$export_line."\r\n";
+
     }
 }

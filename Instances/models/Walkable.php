@@ -5,23 +5,22 @@
  * Date: 12/18/18
  * Time: 10:19 PM
  */
-
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Cellable.php');
-
-abstract class Walkable implements Cellable
+abstract class Walkable extends Cellable
 {
 
     protected $isAlive = true;
-    protected $inMapPositionY;
-    protected $inMapPositionX;
     protected $level;
-    protected $map;
 
     abstract public function goToNextStep($nextIterationStep);
+    abstract function moveForward();
+
     public function fight($enemy)
     {
         //all walakable (exeption Adventurer) fight method
-        echo $this->getPrintName()." fight";
+        if($GLOBALS["DEBUG"])
+            echo $this->getPrintName()." fight";
+
         if($this->level > $enemy->getLevel())
         {
             $enemy->doDie();
@@ -30,27 +29,6 @@ abstract class Walkable implements Cellable
         {
             $this->doDie();
         }
-    }
-    public function getInMapPositionY()
-    {
-        return $this->inMapPositionY;
-    }
-
-    public function getInMapPositionX()
-    {
-        return $this->inMapPositionX;
-    }
-
-    function setMyMapPosition($newY, $newX)
-    {
-        $this->inMapPositionY = $newY;
-        $this->inMapPositionX = $newX;
-        $this->map->initCell($this, $newY, $newX);
-    }
-
-    function getMyInstance()
-    {
-        return $this;
     }
 
     function getLevel(){

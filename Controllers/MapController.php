@@ -1,11 +1,13 @@
 <?php
-//namespace Controllers;
-/*require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Map.php');
-require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Adventurer.php');
-require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Montagne.php');
-require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Tresor.php');
-require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Gobelin.php');
-require ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Orc.php');*/
+/**
+ * Created by PhpStorm.
+ * User: Sviatoslav Prylutsky
+ * Date: 12/02/18
+ * Time: 5:47 AM
+ */
+
+
+include($_SERVER['DOCUMENT_ROOT'] . '/myconf.php');
 
 foreach(glob($_SERVER['DOCUMENT_ROOT'] . "/Instances/" . "/*.php") as $file){
     require_once $file;
@@ -14,10 +16,11 @@ foreach(glob($_SERVER['DOCUMENT_ROOT'] . "/Instances/" . "/*.php") as $file){
 class MapController
 {
     private static $_instance = null;
-    private $debug = false;
     private $map;
     private $walkableInstances = array();
+    private $cellableInstances = array();
     private $someAdventurerMaxSteps = 0;
+
 
     public static function getInstance() {
 
@@ -28,6 +31,14 @@ class MapController
         return self::$_instance;
     }
 
+    public function removeFromCellables($key){
+        if(count($this->cellableInstances)>0)
+        {
+            unset($this->cellableInstances[array_search($key,$this->cellableInstances)]);
+        }
+
+    }
+
     public function loadCfg($path)
     {
         $cfgFile = fopen($path, "r") or die("Impossible d'ouvrir le fichier!");
@@ -36,9 +47,13 @@ class MapController
             $this->applyParams(preg_replace('/\s/', '',fgets($cfgFile)));
         }
         fclose($cfgFile);
-        $this->map->printMap();
-        echo "====== FIRST PRINT BEFORE START GAME =========<br>";
+        if($GLOBALS["DEBUG"]){
+            $this->map->printMap();
+            echo "====== FIRST PRINT BEFORE START GAME =========<br>";
+        }
+
         $this->startGame();
+        $this->exportResults();
     }
 
     /* The game loop, is true while adventurer (X) dont make all movements
@@ -52,18 +67,21 @@ class MapController
         for($currentStep = 0 ; $currentStep < $this->someAdventurerMaxSteps; $currentStep++)
         {
             foreach ($this->walkableInstances as $walkable) {
-                echo $walkable->getPrintName()." goToNextStep <br>";
+                if($GLOBALS["DEBUG"])
+                    echo $walkable->getPrintName()." goToNextStep <br>";
+
                 $walkable->goToNextStep($currentStep);
             }
         }
+
     }
     /*
      * This block make initialization of params
      */
     public function applyParams($line)
     {
-        if($this->debug) {
-            echo 'applyParams '.'<br>'.$line[0].'<br>'.$line[1].'<br>'.$line[2].'<br>'.'+++++++++++++'.'<br>';
+        if($GLOBALS["DEBUG"]) {
+            echo 'applyParams ';
         }
         $cfgKeys = explode("-",$line);
         $key = substr($line,0,1);
@@ -72,36 +90,54 @@ class MapController
                 case "C":
                     $this->map=Map::getInstance();
                     $this->map->initializeMap($cfgKeys[2],$cfgKeys[1]);
+                    array_push($this->cellableInstances,$this->map);
                     break;
 
                 case "M":
-                    new Montagne($cfgKeys[2],$cfgKeys[1]);
+                    $tmp_mont = new Montagne($cfgKeys[2],$cfgKeys[1]);
+                    array_push($this->cellableInstances,$tmp_mont);
                     break;
 
                 case "T":
-                    new Tresor($cfgKeys[3],$cfgKeys[2],$cfgKeys[1]);
+                    $tmp_tresor = new Tresor($cfgKeys[3],$cfgKeys[2],$cfgKeys[1]);
+                    array_push($this->cellableInstances,$tmp_tresor);
                     break;
 
                 case "A":
-                    array_push($this->walkableInstances,new Adventurer($cfgKeys[1],$cfgKeys[3],$cfgKeys[2],$cfgKeys[4],$cfgKeys[5]));
+                    $tmp_advent = new Adventurer($cfgKeys[1],$cfgKeys[3],$cfgKeys[2],$cfgKeys[4],$cfgKeys[5]);
+                    array_push($this->walkableInstances,$tmp_advent);
                     if(strlen($cfgKeys[5]) > $this->someAdventurerMaxSteps)
                     {
                         $this->someAdventurerMaxSteps = strlen($cfgKeys[5]);
                     }
+                    array_push($this->cellableInstances,$tmp_advent);
                     break;
 
                 case "G":
-                    array_push($this->walkableInstances,new Gobelin($cfgKeys[2],$cfgKeys[1],$cfgKeys[3],$cfgKeys[4]));
+                    $tmp_gobelin = new Gobelin($cfgKeys[2],$cfgKeys[1],$cfgKeys[3],$cfgKeys[4]);
+                    array_push($this->walkableInstances,$tmp_gobelin);
+                    array_push($this->cellableInstances,$tmp_gobelin);
                     break;
 
                 case "O":
-                    array_push($this->walkableInstances,new Orc($cfgKeys[2],$cfgKeys[1],$cfgKeys[3],$cfgKeys[4]));
+                    $tmp_orc = new Orc($cfgKeys[2],$cfgKeys[1],$cfgKeys[3],$cfgKeys[4]);
+                    array_push($this->walkableInstances,$tmp_orc);
+                    array_push($this->cellableInstances,$tmp_orc);
                     break;
 
                 default:
                     break;
             }
 
+    }
+
+    public function exportResults()
+    {
+        $ex_file = fopen('results.txt','w');
+        foreach ($this->cellableInstances as $cell)
+            fwrite($ex_file,$cell->getMyResults());
+
+        fclose($ex_file);
     }
 
 }

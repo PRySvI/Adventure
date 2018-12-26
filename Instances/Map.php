@@ -2,10 +2,12 @@
 /**
  * Created by PhpStorm.
  * User: Sviatoslav Prylutsky
- * Date: 12/19/18
+ * Date: 12/02/18
  * Time: 5:52 AM
  */
+
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Plaine.php');
+
 class Map
 {
     private $debug = false;
@@ -32,7 +34,7 @@ class Map
     {
         $this->sizeX = $sizeX;
         $this->sizeY = $sizeY;
-        if ($this->debug) {
+        if ($GLOBALS["DEBUG"]) {
             echo('initializeMap <br>');
         }
         $this->mapGrid = array();
@@ -46,7 +48,7 @@ class Map
     }
     public function initCell($key,$y,$x)
     {
-        if($this->debug) {echo ('initCell  <br>');}
+        if($GLOBALS["DEBUG"]) {echo ('initCell  <br>');}
 
 
         if(!($this->getCellInstanceInfo($y, $x) instanceof Plaine))
@@ -91,7 +93,6 @@ class Map
 
     public function printMap() // debug only
     {
-        if($this->debug) {echo ('printMap  <br>');}
 
         echo '<table style="\width:100% \">';
        foreach ($this->mapGrid as $cell)
@@ -107,8 +108,16 @@ class Map
 
         echo "<br> -------------------------------------  -------------------------------------  -------------------------------------  -------------------------------------  -------------------------------------  -------------------------------------<br> ";
 
+    }
 
+    public function getPrintName(){
+        return "C";
+    }
 
+    public function getMyResults(){
+        $separator = " - ";
+          $export_line = $this->getPrintName().$separator.$this->sizeX.$separator.$this->sizeY;
+        return $export_line."\r\n";
     }
 
 }
