@@ -6,7 +6,7 @@
  * Time: 5:52 AM
  */
 
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Plaine.php');
+require_once ('./Instances/Plaine.php');
 
 class Map
 {

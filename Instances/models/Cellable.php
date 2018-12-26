@@ -5,7 +5,7 @@
  * Date: 12/18/18
  * Time: 10:04 PM
  */
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Sortable.php');
+require_once ('./Instances/models/Sortable.php');
 
 abstract class Cellable implements Sortable
 {
