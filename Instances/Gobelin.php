@@ -7,27 +7,12 @@
  */
 require_once ("models/Monster.php");
 
-class Gobelin extends Walkable implements Monster
+class Gobelin extends Monster
 {
-    private $map;
-    private $direction;
 
-    public function __construct($Y, $X)
-    {
-        $this->map=Map::getInstance();
-        $this->setMyMapPosition($Y, $X);
+    function initDir(){
+        $this->direction = 'E';
     }
-
-    public function goToNextStep($nextIterationStep)
-    {
-        // TODO: Implement goToNextStep() method.
-    }
-
-    public function fight($enemy)
-    {
-        // TODO: Implement fight() method.
-    }
-
     function getPrintName()
     {
         $dead= "";
@@ -38,14 +23,42 @@ class Gobelin extends Walkable implements Monster
         return "G".$dead;
     }
 
-    public function checkMoveRights($X, $Y)
+    function revert_direction()
     {
-        // TODO: Implement checkMoveRights() method.
+        if($this->direction == 'E')
+        {
+            $this->direction='O';
+        }
+        else
+        {
+            $this->direction='E';
+        }
     }
 
-    function setMyMapPosition($Y,$X)
+    function moveForward()
     {
-        $this->map->initCell($this,$Y, $X);
+
+        $tmpX=$this->inMapPositionX;
+        $tmpY=$this->inMapPositionY;
+
+        switch ($this->direction)
+        {
+            case 'E':;
+                $tmpX++;
+                break;
+
+            case 'O':
+                $tmpX--;
+                break;
+
+            default:
+                break;
+        }
+
+
+        $this->map->checkAndPlace($this,$tmpY,$tmpX);
+
+        $this->map->printMap(); //dubug
     }
 
 }

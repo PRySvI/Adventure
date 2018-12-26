@@ -16,19 +16,8 @@ class MapController
     private static $_instance = null;
     private $debug = false;
     private $map;
-    private $adventurers = array();
+    private $walkableInstances = array();
     private $someAdventurerMaxSteps = 0;
-
-    /**
-     * MapController constructor.
-     * @param bool $debug
-     * @param $map
-     * @param $adenturers
-     */
-    public function __construct()
-    {
-
-    }
 
     public static function getInstance() {
 
@@ -60,12 +49,11 @@ class MapController
      */
     public function startGame()
     {
-        //startBots();
-        //
         for($currentStep = 0 ; $currentStep < $this->someAdventurerMaxSteps; $currentStep++)
         {
-            foreach ($this->adventurers as $currentAdventurer) {
-                $currentAdventurer->goToNextStep($currentStep);
+            foreach ($this->walkableInstances as $walkable) {
+                echo $walkable->getPrintName()." goToNextStep <br>";
+                $walkable->goToNextStep($currentStep);
             }
         }
     }
@@ -95,7 +83,7 @@ class MapController
                     break;
 
                 case "A":
-                    array_push($this->adventurers,new Adventurer($cfgKeys[1],$cfgKeys[3],$cfgKeys[2],$cfgKeys[4],$cfgKeys[5]));
+                    array_push($this->walkableInstances,new Adventurer($cfgKeys[1],$cfgKeys[3],$cfgKeys[2],$cfgKeys[4],$cfgKeys[5]));
                     if(strlen($cfgKeys[5]) > $this->someAdventurerMaxSteps)
                     {
                         $this->someAdventurerMaxSteps = strlen($cfgKeys[5]);
@@ -103,11 +91,11 @@ class MapController
                     break;
 
                 case "G":
-                    new Gobelin($cfgKeys[2],$cfgKeys[1]);
+                    array_push($this->walkableInstances,new Gobelin($cfgKeys[2],$cfgKeys[1],$cfgKeys[3],$cfgKeys[4]));
                     break;
 
                 case "O":
-                    new Orc($cfgKeys[2],$cfgKeys[1]);
+                    array_push($this->walkableInstances,new Orc($cfgKeys[2],$cfgKeys[1],$cfgKeys[3],$cfgKeys[4]));
                     break;
 
                 default:

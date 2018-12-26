@@ -1,16 +1,17 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Sviatoslav Prylutsky
+ * Date: 12/19/18
+ * Time: 5:54 AM
+ */
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Walkable.php');
 require_once ('Map.php');
 class Adventurer extends Walkable
 {
-     private $isAlive = true;
-     private $inMapPositionY;
-     private $inMapPositionX;
      private $current_orientation;
      private $moving_route;
      private $name;
-     private $level;
-     private $map;
      private $orientations = array('N','E','S','O');
 
 
@@ -26,30 +27,6 @@ class Adventurer extends Walkable
         $this->level=1;
     }
 
-
-
-    function setMyMapPosition($newY, $newX)
-    {
-        $this->inMapPositionY = $newY;
-        $this->inMapPositionX = $newX;
-        $this->map->initCell($this, $newY, $newX);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInMapPositionY()
-    {
-        return $this->inMapPositionY;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInMapPositionX()
-    {
-        return $this->inMapPositionX;
-    }
 
 
 

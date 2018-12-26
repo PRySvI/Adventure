@@ -11,11 +11,11 @@ require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Cellable.php');
 abstract class Walkable implements Cellable
 {
 
-    private $isAlive = true;
-    private $inMapPositionY;
-    private $inMapPositionX;
-    private $level;
-    private $map;
+    protected $isAlive = true;
+    protected $inMapPositionY;
+    protected $inMapPositionX;
+    protected $level;
+    protected $map;
 
     abstract public function goToNextStep($nextIterationStep);
     public function fight($enemy)
@@ -30,6 +30,22 @@ abstract class Walkable implements Cellable
         {
             $this->doDie();
         }
+    }
+    public function getInMapPositionY()
+    {
+        return $this->inMapPositionY;
+    }
+
+    public function getInMapPositionX()
+    {
+        return $this->inMapPositionX;
+    }
+
+    function setMyMapPosition($newY, $newX)
+    {
+        $this->inMapPositionY = $newY;
+        $this->inMapPositionX = $newX;
+        $this->map->initCell($this, $newY, $newX);
     }
 
     function getMyInstance()
