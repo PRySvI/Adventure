@@ -107,6 +107,12 @@ class Plaine implements Cellable
                         return false;
                     }
 
+                    if($key instanceof Monster && $item instanceof Adventurer || $key instanceof Adventurer && $item instanceof Monster)
+                    {
+                        if($item->getIsAlive() && $key->getIsAlive())
+                            $key->fight($item);
+                    }
+
                     if($key instanceof Adventurer && $item instanceof Tresor)
                     {
                         $key->levelUp();
@@ -122,11 +128,7 @@ class Plaine implements Cellable
                     if($key instanceof Monster && $item instanceof Monster)
                         return false;
 
-                    if($key instanceof Monster && $item instanceof Adventurer || $key instanceof Adventurer && $item instanceof Monster)
-                    {
-                        if($item->getIsAlive() && $key->getIsAlive())
-                            $key->fight($item);
-                    }
+
 
                 }
 

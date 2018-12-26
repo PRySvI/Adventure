@@ -7,44 +7,55 @@
  */
 require_once ("models/Monster.php");
 
-class Orc extends Walkable implements Monster
+class Orc extends Monster
 {
-    private $map;
-    private $direction;
-
-    public function __construct($Y, $X)
+    function initDir()
     {
-        $this->map=Map::getInstance();
-        $this->setMyMapPosition($Y, $X);
+        $this->direction = "S";
     }
 
-    function collapse()
-    {
-        // TODO: Implement collapse() method.
-    }
-
-    public function goToNextStep($nextIterationStep)
-    {
-        // TODO: Implement goToNextStep() method
-    }
-
-    public function fight($enemy)
-    {
-        // TODO: Implement fight() method.
-    }
 
     function getPrintName()
     {
-        return "O";
+        $dead = "";
+        if (!($this->getIsAlive())) {
+            $dead = " (x_x)";
+        }
+        return "O" . $dead;
     }
 
-    public function checkMoveRights($X, $Y)
+    function revert_direction()
     {
-        // TODO: Implement checkMoveRights() method.
+        if ($this->direction == 'S') {
+            $this->direction = 'N';
+        } else {
+            $this->direction = 'S';
+        }
     }
 
-    function setMyMapPosition($Y,$X)
+    function moveForward()
     {
-        $this->map->initCell($this,$Y, $X);
+
+        $tmpX = $this->inMapPositionX;
+        $tmpY = $this->inMapPositionY;
+
+        switch ($this->direction) {
+
+            case 'S':
+                $tmpY++;
+                break;
+
+            case 'N':
+                $tmpY--;
+                break;
+
+            default:
+                break;
+        }
+
+        $this->map->checkAndPlace($this, $tmpY, $tmpX);
+
+        $this->map->printMap(); //dubug
     }
+
 }

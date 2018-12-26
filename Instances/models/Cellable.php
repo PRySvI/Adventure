@@ -6,6 +6,7 @@
  * Time: 10:04 PM
  */
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Sortable.php');
+
 interface Cellable extends Sortable
 {
     function setMyMapPosition($Y,$X);

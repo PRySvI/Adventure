@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Sviatoslav Prylutsky
+ * Date: 12/19/18
+ * Time: 5:52 AM
+ */
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/Plaine.php');
 class Map
 {
@@ -64,14 +70,13 @@ class Map
 
     public function checkAndPlace($inst,$Y,$X)
     {
-        if($this->getSizeX() < $X || $this->getSizeY() < $Y || $X<0)
+        if($this->getSizeX() <= $X || $this->getSizeY() <= $Y || $X<0)
             return;
 
         $cell =  $this->getCellInstanceInfo($Y,$X);
 
         if($inst instanceof Walkable && !($inst->getIsAlive()))
             return;
-
         if($cell -> allowAdd($inst))
         {
 
