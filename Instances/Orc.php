@@ -5,6 +5,7 @@
  * Date: 12/19/18
  * Time: 6:11 AM
  */
+
 require_once ("models/Monster.php");
 
 class Orc extends Monster
@@ -17,11 +18,16 @@ class Orc extends Monster
 
     function getPrintName()
     {
-        $dead = "";
-        if (!($this->getIsAlive())) {
-            $dead = " (x_x)";
+        if($GLOBALS["DEBUG"]){
+
+            $dead = "";
+            if (!($this->getIsAlive())) {
+                $dead = " (x_x)";
+            }
+            return "O" . $dead;
         }
-        return "O" . $dead;
+        return "O";
+
     }
 
     function revert_direction()
@@ -55,7 +61,8 @@ class Orc extends Monster
 
         $this->map->checkAndPlace($this, $tmpY, $tmpX);
 
-        $this->map->printMap(); //dubug
+        if($GLOBALS["DEBUG"])
+            $this->map->printMap(); //dubug
     }
 
 }

@@ -13,14 +13,20 @@ class Gobelin extends Monster
     function initDir(){
         $this->direction = 'E';
     }
+
     function getPrintName()
     {
-        $dead= "";
-        if(!($this->getIsAlive()))
-        {
-            $dead = " (x_x)";
+        if($GLOBALS["DEBUG"]){
+
+            $dead = "";
+            if (!($this->getIsAlive())) {
+                $dead = " (x_x)";
+            }
+            return "G" . $dead;
         }
-        return "G".$dead;
+
+        return "G";
+
     }
 
     function revert_direction()
@@ -58,7 +64,8 @@ class Gobelin extends Monster
 
         $this->map->checkAndPlace($this,$tmpY,$tmpX);
 
-        $this->map->printMap(); //dubug
+        if($GLOBALS["DEBUG"])
+            $this->map->printMap(); //dubug
     }
 
 }

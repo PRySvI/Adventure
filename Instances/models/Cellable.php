@@ -7,9 +7,35 @@
  */
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Sortable.php');
 
-interface Cellable extends Sortable
+abstract class Cellable implements Sortable
 {
-    function setMyMapPosition($Y,$X);
-    function getPrintName();
-    function getMyInstance();
+    protected $inMapPositionY;
+    protected $inMapPositionX;
+    protected $map;
+
+
+    abstract function getPrintName();
+    abstract function getMyResults();
+
+    function setMyMapPosition($Y, $X)
+    {
+        $this->inMapPositionY = $Y;
+        $this->inMapPositionX = $X;
+        $this->map->initCell($this,$Y, $X);
+    }
+
+    public function getInMapPositionY()
+    {
+        return $this->inMapPositionY;
+    }
+
+    public function getInMapPositionX()
+    {
+        return $this->inMapPositionX;
+    }
+
+    public function getMyInstance()
+    {
+        return $this;
+    }
 }

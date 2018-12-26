@@ -2,13 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: Sviatoslav Prylutsky
- * Date: 12/19/18
+ * Date: 12/02/18
  * Time: 6:07 AM
  */
+
 require_once ('Map.php');
-class Montagne implements Cellable
+
+class Montagne extends Cellable
 {
-    private $map;
 
     public function __construct($Y, $X)
     {
@@ -16,15 +17,6 @@ class Montagne implements Cellable
         $this->setMyMapPosition($Y, $X);
     }
 
-    function collapse()
-    {
-        // TODO: Implement collapse() method.
-    }
-
-    function setMyMapPosition($Y, $X)
-    {
-        $this->map->initCell($this,$Y, $X);
-    }
 
     function getPrintName()
     {
@@ -40,5 +32,13 @@ class Montagne implements Cellable
     public function getSortWeight()
     {
         return 4;
+    }
+
+    public function getMyResults()
+    {
+        $separator = " - ";
+        $export_line = $this->getPrintName().$separator.$this->getInMapPositionX().$separator.$this->getInMapPositionY();
+        return $export_line."\r\n";
+
     }
 }
