@@ -7,9 +7,9 @@
  */
 
 
-include($_SERVER['DOCUMENT_ROOT'] . '/myconf.php');
+include('./myconf.php');
 
-foreach(glob($_SERVER['DOCUMENT_ROOT'] . "/Instances/" . "/*.php") as $file){
+foreach(glob("./Instances/" . "/*.php") as $file){
     require_once $file;
 }
 
@@ -39,9 +39,9 @@ class MapController
 
     }
 
-    public function loadCfg($path)
+    public function loadCfg()
     {
-        $cfgFile = fopen($path, "r") or die("Impossible d'ouvrir le fichier!");
+        $cfgFile = fopen("input_config.txt", "r") or die("Impossible d'ouvrir le fichier!");
         while(!feof($cfgFile))
         {
             $this->applyParams(preg_replace('/\s/', '',fgets($cfgFile)));
@@ -133,7 +133,7 @@ class MapController
 
     public function exportResults()
     {
-        $ex_file = fopen('results.txt','w');
+        $ex_file = fopen('output_config.txt','w');
         foreach ($this->cellableInstances as $cell)
             fwrite($ex_file,$cell->getMyResults());
 

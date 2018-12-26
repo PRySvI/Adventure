@@ -6,7 +6,7 @@
  * Time: 6:08 AM
  */
 
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Cellable.php');
+require_once ('./Instances/models/Cellable.php');
 //use \Cellable as Cellable;
 
 class Plaine extends Cellable

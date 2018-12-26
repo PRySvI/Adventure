@@ -5,7 +5,7 @@
  * Date: 12/18/18
  * Time: 10:19 PM
  */
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Cellable.php');
+require_once ('./Instances/models/Cellable.php');
 abstract class Walkable extends Cellable
 {
 

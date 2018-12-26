@@ -5,7 +5,7 @@
  * Date: 12/19/18
  * Time: 6:06 AM
  */
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/Controllers/MapController.php');
+require_once ('./Controllers/MapController.php');
 class Tresor extends Cellable
 {
     private $count=0;

@@ -5,8 +5,8 @@
  * Date: 12/02/18
  * Time: 5:54 AM
  */
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/Instances/models/Walkable.php');
-require_once ('Map.php');
+require_once ('./Instances/models/Walkable.php');
+require_once ('./Instances/Map.php');
 
 class Adventurer extends Walkable
 {
